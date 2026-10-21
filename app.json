@@ -1,0 +1,40 @@
+{
+  "package_id": "com.evenhub.eveng2standard",
+  "edition": "202601",
+  "name": "ORBITAL HUD",
+  "version": "0.1.40",
+  "min_app_version": "2.2.10",
+  "min_sdk_version": "0.0.16",
+  "entrypoint": "index.html",
+  "permissions": [
+    {
+      "name": "network",
+      "desc": "Fetches weather, map, quotes, AI, search, and public LeetCode daily statements and diagrams.",
+      "whitelist": [
+        "https://api.openai.com",
+        "wss://api.openai.com",
+        "https://api.tavily.com",
+        "https://api.open-meteo.com",
+        "https://air-quality-api.open-meteo.com",
+        "https://tiles.openfreemap.org",
+        "https://geocoding-api.open-meteo.com",
+        "https://v1.hitokoto.cn",
+        "https://leetcode.com",
+        "https://assets.leetcode.com",
+        "https://alfa-leetcode-api.onrender.com",
+        "https://leetcode-api-pied.vercel.app"
+      ]
+    },
+    {
+      "name": "g2-microphone",
+      "desc": "Captures speech while holding to talk in AI chat, or while explicitly enabled Teleprompt voice follow is active."
+    },
+    {
+      "name": "location",
+      "desc": "Reads the phone's high-accuracy location for nearby weather and wind map when GPS is enabled."
+    }
+  ],
+  "supported_languages": [
+    "en"
+  ]
+}

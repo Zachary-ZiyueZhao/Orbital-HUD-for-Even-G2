@@ -1,0 +1,5 @@
+{
+  "name": "orbital-ai-relay",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-10-16"
+}

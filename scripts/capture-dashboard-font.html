@@ -1,0 +1,33 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Export native G2 glyphs at 1:1</title>
+<script type="module">
+import { waitForEvenAppBridge, CreateStartUpPageContainer, TextContainerProperty, OsEventTypeList } from '/node_modules/@evenrealities/even_hub_sdk/dist/index.js'
+const bridge = await waitForEvenAppBridge()
+const allPoints = await fetch('./font-codepoints.json').then(response => response.json())
+const subset = new URLSearchParams(location.search).get('points')
+const points = subset ? subset.split(',').map(Number).filter(point => Number.isInteger(point) && point >= 32 && point <= 0x10ffff) : allPoints
+let batch = 0
+let busy = false
+async function paint(first = false) {
+  busy = true
+  const textObject = points.slice(batch * 8, batch * 8 + 8).map((point, index) => new TextContainerProperty({
+    xPosition: 16 + index * 64, yPosition: 16, width: 48, height: 48,
+    borderWidth: 0, paddingLength: 0, containerID: index + 1,
+    containerName: 'glyph-' + index, content: String.fromCodePoint(point),
+    textColor: 4, isEventCapture: index === 0 ? 1 : 0,
+  }))
+  const payload = new CreateStartUpPageContainer({ containerTotalNum: textObject.length, textObject })
+  if (first) await bridge.createStartUpPageContainer(payload)
+  else await bridge.rebuildPageContainer(payload)
+  console.log('FONT_BATCH:' + batch)
+  busy = false
+}
+bridge.onEvenHubEvent(event => {
+  if (!busy && event.textEvent?.eventType === OsEventTypeList.SCROLL_BOTTOM_EVENT) {
+    batch = Math.min(batch + 1, Math.ceil(points.length / 8) - 1)
+    void paint()
+  }
+})
+await paint(true)
+</script>
